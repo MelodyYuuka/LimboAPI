@@ -25,6 +25,7 @@ jobs:
           path: |
             plugin/build/minecraft/
             plugin/build/generated/minecraft/mapping/
+            ~/.gradle/caches/limboapi-minecraft/
           key: minecraft-${{ hashFiles('gradle.properties') }}
       - name: Build LimboAPI
         run: ./gradlew build
