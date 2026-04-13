@@ -34,30 +34,30 @@ jobs:
         with:
           name: LimboAPI
           path: "*/build/libs/*.jar"
+      - name: Generate release tag
+        if: ${{ github.event_name == 'push' }}
+        id: release-tag
+        run: |
+          git fetch --tags
+          LATEST_BUILD=0
+          if git tag | grep -E "^build-[0-9]+$" > /dev/null; then
+            LATEST_BUILD=$(git tag | grep -E "^build-[0-9]+$" | sed 's/build-//' | sort -n | tail -1)
+          fi
+          NEW_BUILD=$((LATEST_BUILD + 1))
+          echo "tag=build-$NEW_BUILD" >> $GITHUB_OUTPUT
+          echo "build_nr=$NEW_BUILD" >> $GITHUB_OUTPUT
       - name: Find correct JAR
         if: ${{ github.event_name == 'push' }}
         id: find-jar
         run: |
           output="$(find plugin/build/libs/ ! -name "*-javadoc.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
           echo "jarname=$output" >> $GITHUB_OUTPUT
-      - name: Find git version
+      - name: Release build
         if: ${{ github.event_name == 'push' }}
-        id: git-version
-        run: echo "id=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-      - name: Delete existing dev-build release
-        if: ${{ github.event_name == 'push' }}
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
+        uses: marvinpinto/action-automatic-releases@master
         with:
-          delete_release: true
-          tag_name: dev-build
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Release dev build
-        if: ${{ github.event_name == 'push' }}
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: plugin/build/libs/${{ steps.find-jar.outputs.jarname }}
-          body: ${{ join(github.event.commits.*.message, '\n') }}
-          prerelease: true
-          name: Dev-build ${{ steps.git-version.outputs.id }}
-          tag: dev-build
+          title: "LimboAPI (Velocity-CTD) build-${{ steps.release-tag.outputs.build_nr }}"
+          automatic_release_tag: "${{ steps.release-tag.outputs.tag }}"
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          files: plugin/build/libs/${{ steps.find-jar.outputs.jarname }}
+          prerelease: false
