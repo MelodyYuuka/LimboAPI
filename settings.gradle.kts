@@ -2,7 +2,7 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven {
-            name = "gritter-repo"
+            name = "velocityctd-repo"
             url = uri("https://repo.velocityctd.com/snapshots/")
         }
         maven {
