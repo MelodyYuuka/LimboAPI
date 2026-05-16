@@ -4,6 +4,8 @@
 
 [Elytrium/LimboAPI](https://github.com/Elytrium/LimboAPI) does not natively support [Velocity-CTD](https://github.com/GemstoneGG/Velocity-CTD). This fork of LimboAPI is maintained to work with Velocity-CTD. Download the latest version [here](https://github.com/GemstoneGG/LimboAPI/releases/latest).
 
+Below follows Elytrium/LimboAPI's README.
+
 ---
 
 [![Join our Discord](https://img.shields.io/discord/775778822334709780.svg?logo=discord&label=Discord)](https://ely.su/discord)
@@ -91,6 +93,10 @@ Test server: [``ely.su``](https://hotmc.ru/minecraft-server-203216)
 ## Donation
 
 Your donations are really appreciated. Donations wallets/links/cards:
+
+**NOTE: These donation links are for Elytrium/LimboAPI. To support the maintainers of this fork,
+that's keeping LimboAPI up-to-date to work with Velocity-CTD, consider joining the RootBeer discord:
+[discord.gg/beer](https://discord.gg/beer).**
 
 - MasterCard Debit Card (Tinkoff Bank): ``5536 9140 0599 1975``
 - Qiwi Wallet: ``PFORG`` or [this link](https://my.qiwi.com/form/Petr-YSpyiLt9c6)
