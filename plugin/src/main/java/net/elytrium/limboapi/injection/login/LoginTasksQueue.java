@@ -220,15 +220,22 @@ public class LoginTasksQueue {
         if (reason.isPresent()) {
           this.player.disconnect0(reason.get(), false);
         } else {
-          if (this.server.registerConnection(this.player)) {
-            if (connection.getActiveSessionHandler() instanceof LoginConfirmHandler confirm) {
-              confirm.waitForConfirmation(() -> this.connectToServer(logger, this.player, connection));
-            } else {
-              this.connectToServer(logger, this.player, connection);
+          this.server.registerConnection(this.player).whenCompleteAsync((registered, err) -> {
+            if (err != null) {
+              logger.error("Exception while registering connection for {}", this.player, err);
+              this.player.disconnect0(Component.translatable("velocity.error.already-connected-proxy"), false);
+              return;
             }
-          } else {
-            this.player.disconnect0(Component.translatable("velocity.error.already-connected-proxy"), false);
-          }
+            if (registered) {
+              if (connection.getActiveSessionHandler() instanceof LoginConfirmHandler confirm) {
+                confirm.waitForConfirmation(() -> this.connectToServer(logger, this.player, connection));
+              } else {
+                this.connectToServer(logger, this.player, connection);
+              }
+            } else {
+              this.player.disconnect0(Component.translatable("velocity.error.already-connected-proxy"), false);
+            }
+          }, connection.eventLoop());
         }
       }
     }, connection.eventLoop()).exceptionally(t -> {
